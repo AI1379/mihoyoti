@@ -160,21 +160,37 @@ function showFinalQuestion() {
 }
 
 // --- Calculating ---
+let calcInterval = null
+
 function goToCalculating() {
   quizScreen.classList.remove('active')
   quizScreen.classList.add('hidden')
-
-  // Deactivate CRT for calculating phase (unless flyme wins)
+  
   deactivateCRT()
-
+  
   calcScreen.classList.remove('hidden')
   calcScreen.classList.add('active')
 
+  // Spinner animation logic
+  const baseLogos = Object.values(results).map(r => r.icon).filter(i => i && !i.includes('flyme'))
+  const arrayShuffle = [...baseLogos].sort(() => 0.5 - Math.random())
+  const calcLogoNode = $('calc-logo')
+  let spinCount = 0
+
+  if (calcLogoNode && arrayShuffle.length > 0) {
+    calcLogoNode.src = arrayShuffle[spinCount % arrayShuffle.length]
+    calcInterval = setInterval(() => {
+      spinCount++
+      calcLogoNode.src = arrayShuffle[spinCount % arrayShuffle.length]
+    }, 850) // Synced with new 0.85s CSS animation
+  }
+
   setTimeout(() => {
+    if (calcInterval) clearInterval(calcInterval)
     calcScreen.classList.remove('active')
     calcScreen.classList.add('hidden')
     showResult()
-  }, 2500)
+  }, 2550) // Exactly 3 full cycles of 0.85s
 }
 
 // --- Result ---
