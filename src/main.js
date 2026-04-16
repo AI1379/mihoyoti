@@ -21,6 +21,10 @@ const progressText = $('progress-text')
 const sectionLabel = $('section-label')
 const qContainer = $('question-container')
 const crtOverlay = $('crt-overlay')
+const backBtn = $('back-btn')
+
+// --- History State ---
+let historyStack = []
 
 // --- Start ---
 $('start-btn').addEventListener('click', () => {
@@ -28,6 +32,10 @@ $('start-btn').addEventListener('click', () => {
   startScreen.classList.add('hidden')
   quizScreen.classList.remove('hidden')
   quizScreen.classList.add('active')
+  
+  historyStack = []
+  updateBackButton()
+  
   showQuestion(0)
 })
 
@@ -102,7 +110,6 @@ function onAnswer(btn, card) {
   if (transitioning) return
   transitioning = true
 
-  // Visual feedback — disable all buttons, highlight selected
   card.querySelectorAll('.option').forEach(b => {
     b.style.pointerEvents = 'none'
     b.style.opacity = '0.4'
@@ -110,13 +117,16 @@ function onAnswer(btn, card) {
   btn.classList.add('selected')
   btn.style.opacity = '1'
 
-  // Score
   const pts = btn.dataset.points.split(',')
+  
+  historyStack.push(pts)
+  updateBackButton()
+
   pts.forEach(k => {
     if (scores[k] !== undefined) scores[k]++
   })
 
-  // Hidden Q20 option B → directly force flyme result
+  // Hidden Q20 option B
   if (isHiddenPath && pts.includes('flyme')) {
     forcedResult = 'flyme'
   }
@@ -133,7 +143,41 @@ function onAnswer(btn, card) {
   }, 500)
 }
 
-// --- Final question with hidden trigger ---
+function updateBackButton() {
+  if (historyStack.length > 0) {
+    backBtn.classList.remove('hidden')
+  } else {
+    backBtn.classList.add('hidden')
+  }
+}
+
+backBtn.addEventListener('click', () => {
+  if (transitioning || historyStack.length === 0) return
+  transitioning = true
+
+  const lastPts = historyStack.pop()
+  lastPts.forEach(k => {
+    if (scores[k] !== undefined) scores[k]--
+  })
+  
+  updateBackButton()
+  
+  if (isFinalQuestion) {
+    isFinalQuestion = false
+    deactivateCRT()
+    isHiddenPath = false
+    currentIdx = questions.length - 1
+    showQuestion(currentIdx)
+  } else {
+    currentIdx--
+    showQuestion(currentIdx)
+  }
+
+  setTimeout(() => {
+    transitioning = false
+  }, 500)
+})
+
 function showFinalQuestion() {
   isFinalQuestion = true
 
@@ -312,3 +356,4 @@ function deactivateCRT() {
     flymeBg.classList.remove('active')
   }
 }
+
