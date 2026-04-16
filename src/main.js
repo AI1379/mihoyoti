@@ -31,6 +31,20 @@ $('start-btn').addEventListener('click', () => {
   showQuestion(0)
 })
 
+// --- Debug Trick (Dev Only) ---
+if (import.meta.env.DEV) {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'D' && e.shiftKey) {
+      console.log('[DEBUG] Forcing hidden FlyMe2theMoon result')
+      forcedResult = 'flyme'
+      isFinalQuestion = true
+      startScreen.classList.remove('active')
+      startScreen.classList.add('hidden')
+      goToCalculating()
+    }
+  })
+}
+
 // --- Question flow ---
 function showQuestion(idx) {
   currentIdx = idx
@@ -53,9 +67,8 @@ function renderCard(q, extraClass = '') {
 
   const optionsHtml = q.options.map((o, i) => `
     <button class="option" data-idx="${i}" data-points="${o.points.join(',')}">
-      <span class="opt-label">${o.label}</span>
-      <span class="opt-text">${o.text}</span>
-      <span class="opt-arrow">→</span>
+      <div class="opt-label"><span>${o.label}</span></div>
+      <div class="opt-text">${o.text}</div>
     </button>
   `).join('')
 
@@ -258,6 +271,11 @@ function showResult() {
   // CRT for hidden result
   if (r.hidden) {
     activateCRT()
+    const flymeBg = $('flyme-bg')
+    if (flymeBg) {
+      flymeBg.classList.remove('hidden')
+      flymeBg.classList.add('active')
+    }
   }
 }
 
@@ -273,4 +291,9 @@ function deactivateCRT() {
   crtOverlay.classList.remove('active')
   crtOverlay.classList.remove('crt-on')
   document.body.classList.remove('crt-active')
+  const flymeBg = $('flyme-bg')
+  if (flymeBg) {
+    flymeBg.classList.add('hidden')
+    flymeBg.classList.remove('active')
+  }
 }
