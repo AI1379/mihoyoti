@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>你的灵魂归处 — 米家专属人格测试</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Start screen -->
+    <div id="start-screen" class="screen active">
+      <div class="start-content">
+        <div class="start-icon">🌙</div>
+        <div class="start-subtitle">米家专属人格测试</div>
+        <h1 class="start-title">你的灵魂归处</h1>
+        <p class="start-desc">20 道灵魂拷问，发现属于你的米家世界</p>
+        <button id="start-btn" class="primary-btn">开始测试</button>
+      </div>
+    </div>
+
+    <!-- Quiz screen -->
+    <div id="quiz-screen" class="screen hidden">
+      <div class="quiz-header">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-info">
+          <span class="section-label" id="section-label"></span>
+          <span class="progress-text" id="progress-text">1 / 20</span>
+        </div>
+      </div>
+      <div class="question-container" id="question-container"></div>
+    </div>
+
+    <!-- Calculating screen -->
+    <div id="calc-screen" class="screen hidden">
+      <div class="calc-content">
+        <div class="calc-orb"></div>
+        <div class="calc-text">正在寻找你的灵魂归处...</div>
+      </div>
+    </div>
+
+    <!-- Result screen -->
+    <div id="result-screen" class="screen hidden"></div>
+
+    <!-- CRT overlay -->
+    <div id="crt-overlay" class="crt-overlay"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
