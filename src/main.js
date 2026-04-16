@@ -247,8 +247,7 @@ function showResult() {
         ${scoreBars}
       </div>
       <button class="restart-btn" onclick="location.reload()">重新测试</button>
-    </div>
-  `
+    </div>    <a href="https://github.com/AI1379/mihoyoti" target="_blank" class="author-link" style="position: absolute; bottom: 20px; right: 20px;">© AI1379 | GitHub</a>  `
 
   resultScreen.classList.remove('hidden')
   resultScreen.classList.add('active')
